@@ -1,0 +1,18 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 80px; /* Add padding to account for the sticky navbar */
+}
+
+.container {
+  flex: 1;
+  padding: 20px;
+}
+
+.recipeGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px; /* Add gap between cards */
+}
