@@ -1,5 +1,6 @@
 import React from 'react';
 import RecipeCard from '../components/RecipeCard';
+import { Typography } from '@mui/material';
 import styles from '../styles/Home.module.css';
 
 const Home = () => {
@@ -141,8 +142,11 @@ const Home = () => {
 
   return (
     <div className={styles.home}>
+      {/* Recipe Grid */}
       <div className={styles.container}>
-        <h1>Featured Recipes</h1>
+        <Typography variant="h3" gutterBottom align="center" style={{ marginTop: '40px' }}>
+          Featured Recipes
+        </Typography>
         <div className={styles.recipeGrid}>
           {featuredRecipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />

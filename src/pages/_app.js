@@ -1,14 +1,18 @@
-import '../styles/globals.css';
+import React from 'react';
+import { Router } from 'next/router';
+import Welcome from './welcome'; // Import the Welcome Page
+import Home from './index'; // Import the Homepage
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <div>
+    <>
       <Navbar />
       <Component {...pageProps} />
       <Footer />
-    </div>
+    </>
   );
 }
 

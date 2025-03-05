@@ -8,7 +8,7 @@ const Upload = () => {
     ingredients: '',
     instructions: '',
     image: null,
-    imagePreview: null,
+    imagePreview: null, // For image preview
   });
 
   const handleChange = (e) => {
@@ -27,12 +27,24 @@ const Upload = () => {
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setRecipe({ ...recipe, image: file, imagePreview: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!recipe.title || !recipe.description || !recipe.ingredients || !recipe.instructions || !recipe.image) {
-      alert('Please fill out all fields and upload an image.');
-      return;
-    }
     console.log('Recipe submitted:', recipe);
     // Add logic to upload the recipe to a backend or database
   };
@@ -45,6 +57,7 @@ const Upload = () => {
         alignItems: 'center',
         padding: '20px',
         marginTop: '80px', // Adjust for the sticky navbar
+        marginBottom: '120px', // Add margin for the footer
       }}
     >
       <Typography variant="h4" gutterBottom>
@@ -68,6 +81,51 @@ const Upload = () => {
             gap: '20px',
           }}
         >
+          {/* Image Upload Section */}
+          <Box
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            sx={{
+              border: '2px dashed #6B8E23',
+              borderRadius: '8px',
+              padding: '20px',
+              textAlign: 'center',
+              backgroundColor: '#f5f5f5',
+              cursor: 'pointer',
+              '&:hover': {
+                backgroundColor: '#e0e0e0',
+              },
+            }}
+          >
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: 'none' }}
+              id="upload-image"
+            />
+            <label htmlFor="upload-image">
+              <Button
+                variant="contained"
+                component="span"
+                sx={{
+                  backgroundColor: '#6B8E23',
+                  color: '#fff',
+                  '&:hover': {
+                    backgroundColor: '#5a7c1f',
+                  },
+                }}
+              >
+                Browse or Drag & Drop Image
+              </Button>
+            </label>
+            {recipe.imagePreview && (
+              <Typography variant="body2" sx={{ marginTop: '10px' }}>
+                Selected file: {recipe.image.name}
+              </Typography>
+            )}
+          </Box>
+
           {/* Image Preview */}
           {recipe.imagePreview && (
             <CardMedia
@@ -76,34 +134,11 @@ const Upload = () => {
               alt="Recipe Preview"
               sx={{
                 maxHeight: '200px',
-                borderRadius: '8px',
                 objectFit: 'cover',
+                borderRadius: '8px',
               }}
             />
           )}
-
-          {/* File Upload */}
-          <Button
-            variant="outlined"
-            component="label"
-            fullWidth
-            sx={{
-              padding: '10px',
-              border: '2px dashed #6B8E23',
-              color: '#6B8E23',
-              '&:hover': {
-                backgroundColor: '#f0f0f0',
-              },
-            }}
-          >
-            Upload Image
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              hidden
-            />
-          </Button>
 
           {/* Recipe Title */}
           <TextField
@@ -113,7 +148,7 @@ const Upload = () => {
             onChange={handleChange}
             fullWidth
             required
-            placeholder="Enter the title of your recipe..."
+            placeholder="Enter the recipe title..."
           />
 
           {/* Recipe Description */}
@@ -126,7 +161,7 @@ const Upload = () => {
             multiline
             rows={3}
             required
-            placeholder="Describe your recipe in a few words..."
+            placeholder="Describe the recipe..."
           />
 
           {/* Ingredients */}

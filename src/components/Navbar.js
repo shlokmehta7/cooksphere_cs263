@@ -21,9 +21,10 @@ const Navbar = () => {
     <AppBar
       position="fixed" // Make the navbar sticky
       style={{
-        backgroundColor: '#6B8E23',
+        background: 'linear-gradient(90deg, #6B8E23, #8AA63A)', // Gradient background
         width: '100%', // Ensure the navbar spans the full width
         zIndex: 1000, // Ensure the navbar stays above other content
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Subtle shadow
       }}
     >
       <Toolbar>
@@ -121,7 +122,7 @@ const Navbar = () => {
             component={Link}
             href="/"
             startIcon={<HomeIcon />} // Home icon
-            style={{ textTransform: 'none' }} // Prevent uppercase text
+            style={{ textTransform: 'none', margin: '0 10px', color: '#fff' }} // Prevent uppercase text
           >
             Home
           </Button>
@@ -132,7 +133,7 @@ const Navbar = () => {
             component={Link}
             href="/upload"
             startIcon={<UploadIcon />} // Upload icon
-            style={{ textTransform: 'none' }} // Prevent uppercase text
+            style={{ textTransform: 'none', margin: '0 10px', color: '#fff' }} // Prevent uppercase text
           >
             Upload
           </Button>
@@ -143,7 +144,7 @@ const Navbar = () => {
             component={Link}
             href="/login"
             startIcon={<LoginIcon />} // Login icon
-            style={{ textTransform: 'none' }} // Prevent uppercase text
+            style={{ textTransform: 'none', margin: '0 10px', color: '#fff' }} // Prevent uppercase text
           >
             Login
           </Button>
@@ -154,7 +155,7 @@ const Navbar = () => {
             component={Link}
             href="/profile"
             startIcon={<AccountCircleIcon />} // Profile icon
-            style={{ textTransform: 'none' }} // Prevent uppercase text
+            style={{ textTransform: 'none', margin: '0 10px', color: '#fff' }} // Prevent uppercase text
           >
             Profile
           </Button>

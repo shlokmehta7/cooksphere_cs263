@@ -29,6 +29,8 @@ const Signup = () => {
         minHeight: '100vh',
         padding: '20px',
         backgroundColor: '#f5f5f5', // Light background color
+        marginBottom: '120px',
+        marginTop: '55px'
       }}
     >
       <Card
@@ -86,6 +88,18 @@ const Signup = () => {
             fullWidth
             required
             placeholder="Enter your password..."
+          />
+
+          {/* Password Field */}
+          <TextField
+            name="password"
+            label="Confirm Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            required
+            placeholder="Enter your password again..."
           />
 
           {/* Submit Button */}

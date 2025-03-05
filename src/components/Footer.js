@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
 
 const Footer = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -30,17 +33,28 @@ const Footer = () => {
         color: '#fff',
         textAlign: 'center',
         padding: '20px',
-        position: 'fixed', // Make the footer fixed
+        position: 'fixed',
         bottom: isVisible ? 0 : '-100px', // Show/hide based on scroll
-        left: 0, // Span the full width
-        right: 0, // Span the full width
-        zIndex: 1000, // Ensure it stays above other content
-        transition: 'bottom 0.3s ease-in-out', // Smooth transition
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        transition: 'bottom 0.3s ease-in-out',
       }}
     >
       <Typography variant="body1">
         &copy; 2025 CookSphere. All rights reserved.
       </Typography>
+      <Box sx={{ marginTop: '10px' }}>
+        <IconButton href="https://facebook.com" target="_blank" style={{ color: '#fff' }}>
+          <FacebookIcon />
+        </IconButton>
+        <IconButton href="https://twitter.com" target="_blank" style={{ color: '#fff' }}>
+          <TwitterIcon />
+        </IconButton>
+        <IconButton href="https://instagram.com" target="_blank" style={{ color: '#fff' }}>
+          <InstagramIcon />
+        </IconButton>
+      </Box>
     </Box>
   );
 };
