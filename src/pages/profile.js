@@ -1,132 +1,118 @@
-import React from 'react';
-import { Box, Typography, Avatar, Button } from '@mui/material';
-import RecipeCard from '../components/RecipeCard';
-import styles from '../styles/Profile.module.css';
+import React, { useEffect, useState } from "react";
+import { Box, Typography, Avatar, Button, IconButton } from "@mui/material";
+import RecipeCard from "../components/RecipeCard";
+import { useAuth } from "../context/AuthContext";
+import styles from "../styles/Profile.module.css";
+import { db } from "./firebase";
+import { collection, getDocs, query, where, updateDoc } from "firebase/firestore";
 
 const Profile = () => {
-  // Hardcoded profile data
-  const profile = {
-    name: 'John Doe',
-    profilePicture: '/images/profile-pic.jpg', // Add a profile picture
-    followers: 120,
-    followings: 85,
-    recipesPosted: 10,
+  const { currentUser, logout } = useAuth();
+  const [recipes, setRecipes] = useState([]);
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (currentUser) {
+        try {
+          const usersRef = collection(db, "users");
+          const q = query(usersRef, where("uid", "==", currentUser.uid));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const userData = querySnapshot.docs[0].data();
+            setUsername(userData.username);
+            setProfilePicture(userData.profilePicture);
+          }
+
+          const recipesRef = collection(db, "recipes");
+          const recipesQuery = query(recipesRef, where("userId", "==", currentUser.uid));
+          const recipesSnapshot = await getDocs(recipesQuery);
+          const recipes = recipesSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setRecipes(recipes);
+        } catch (error) {
+          console.error("Failed to fetch data:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [currentUser]);
+
+  const handleProfilePictureChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicture(reader.result);
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, where("uid", "==", currentUser.uid));
+        getDocs(q).then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            updateDoc(userDoc.ref, { profilePicture: reader.result });
+          }
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   };
-
-  // Hardcoded saved recipes data
-  const savedRecipes = [
-    {
-      id: 1,
-      title: 'Pasta Carbonara',
-      description: 'Creamy Italian pasta dish with eggs, cheese, and bacon.',
-      image: '/images/pasta.jpg',
-      likes: 12,
-      comments: 5,
-    },
-    {
-      id: 2,
-      title: 'Chicken Tikka Masala',
-      description: 'Spicy and creamy Indian chicken curry.',
-      image: '/images/chicken-tikka.jpg',
-      likes: 8,
-      comments: 3,
-    },
-  ];
-
-  // Hardcoded posted recipes data
-  const postedRecipes = [
-    {
-      id: 3,
-      title: 'Chocolate Cake',
-      description: 'Rich and decadent chocolate cake.',
-      image: '/images/chocolate-cake.jpg',
-      likes: 15,
-      comments: 7,
-    },
-    {
-      id: 4,
-      title: 'Vegetable Stir Fry',
-      description: 'Healthy and colorful vegetable stir fry.',
-      image: '/images/stir-fry.jpg',
-      likes: 6,
-      comments: 2,
-    },
-  ];
 
   return (
     <div className={styles.profile}>
       {/* Profile Section */}
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: '20px',
-          backgroundColor: '#f5f5f5',
-          borderRadius: '12px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          marginBottom: '40px',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "20px",
+          backgroundColor: "#f5f5f5",
+          borderRadius: "12px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          marginBottom: "40px",
         }}
       >
-        <Avatar
-          src={profile.profilePicture}
-          alt={profile.name}
-          sx={{ width: 120, height: 120, marginBottom: '20px' }}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleProfilePictureChange}
+          style={{ display: "none" }}
+          id="profile-picture-upload"
         />
+        <label htmlFor="profile-picture-upload">
+          <IconButton component="span">
+            <Avatar
+              src={profilePicture}
+              alt={username}
+              sx={{ width: 150, height: 150, marginBottom: "20px" }}
+            />
+          </IconButton>
+        </label>
         <Typography variant="h4" gutterBottom>
-          {profile.name}
+          {username}
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            width: '100%',
-            maxWidth: '400px',
-            marginBottom: '20px',
-          }}
-        >
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="h6">{profile.followers}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Followers
-            </Typography>
-          </Box>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="h6">{profile.followings}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Following
-            </Typography>
-          </Box>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="h6">{profile.recipesPosted}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Recipes
-            </Typography>
-          </Box>
-        </Box>
-        <Button variant="contained" color="primary">
-          Edit Profile
+        <Button variant="contained" color="primary" onClick={logout}>
+          Logout
         </Button>
       </Box>
 
-      {/* Saved Recipes Section */}
+      {/* Uploaded Recipes Section */}
       <Typography variant="h5" gutterBottom>
-        Saved Recipes
+        Your Recipes
       </Typography>
       <Box className={styles.recipeGrid}>
-        {savedRecipes.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
-        ))}
-      </Box>
-
-      {/* Posted Recipes Section */}
-      <Typography variant="h5" gutterBottom style={{ marginTop: '40px' }}>
-        Posted Recipes
-      </Typography>
-      <Box className={styles.recipeGrid}>
-        {postedRecipes.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
-        ))}
+        {recipes.length > 0 ? (
+          recipes.map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe} />
+          ))
+        ) : (
+          <Typography variant="body1">No recipes found.</Typography>
+        )}
       </Box>
     </div>
   );

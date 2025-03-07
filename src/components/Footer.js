@@ -1,29 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, IconButton } from '@mui/material';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import InstagramIcon from '@mui/icons-material/Instagram';
+import React, { useState, useEffect } from "react";
+import { Box, Typography, IconButton } from "@mui/material";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
 
 const Footer = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // Function to check if the user has scrolled to the bottom
   const checkScroll = () => {
     const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
     const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
 
     if (scrollTop + clientHeight >= scrollHeight - 10) {
-      setIsVisible(true); // Show footer when scrolled to the bottom
+      setIsVisible(true);
     } else {
-      setIsVisible(false); // Hide footer otherwise
+      setIsVisible(false);
     }
   };
 
-  // Add scroll event listener on component mount
   useEffect(() => {
     window.addEventListener('scroll', checkScroll);
-    return () => window.removeEventListener('scroll', checkScroll); // Cleanup
+    return () => window.removeEventListener('scroll', checkScroll);
   }, []);
 
   return (
@@ -34,7 +32,7 @@ const Footer = () => {
         textAlign: 'center',
         padding: '20px',
         position: 'fixed',
-        bottom: isVisible ? 0 : '-100px', // Show/hide based on scroll
+        bottom: isVisible ? 0 : '-100px', 
         left: 0,
         right: 0,
         zIndex: 1000,

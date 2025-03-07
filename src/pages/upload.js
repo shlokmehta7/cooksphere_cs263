@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Card, CardMedia } from '@mui/material';
+import React, { useState } from "react";
+import { Box, TextField, Button, Typography, Card, CardMedia } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/router";
+import { db } from "./firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 const Upload = () => {
+  const { currentUser } = useAuth();
+  const router = useRouter();
   const [recipe, setRecipe] = useState({
     title: '',
     description: '',
     ingredients: '',
     instructions: '',
     image: null,
-    imagePreview: null, // For image preview
+    imagePreview: null,
   });
 
   const handleChange = (e) => {
@@ -27,64 +33,38 @@ const Upload = () => {
     }
   };
 
-  const handleDragOver = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  };
+    if (!currentUser) {
+      alert("Please log in to upload a recipe.");
+      return;
+    }
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setRecipe({ ...recipe, image: file, imagePreview: reader.result });
-      };
-      reader.readAsDataURL(file);
+    const recipeData = {
+      title: recipe.title,
+      description: recipe.description,
+      ingredients: recipe.ingredients,
+      instructions: recipe.instructions,
+      image: recipe.imagePreview,
+      userId: currentUser.uid,
+    };
+
+    try {
+      const docRef = await addDoc(collection(db, "recipes"), recipeData);
+      console.log("Recipe added with ID:", docRef.id);
+      router.push("/"); 
+    } catch (error) {
+      console.error("Failed to upload recipe:", error);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Recipe submitted:', recipe);
-    // Add logic to upload the recipe to a backend or database
-  };
-
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '20px',
-        marginTop: '80px', // Adjust for the sticky navbar
-        marginBottom: '120px', // Add margin for the footer
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        Upload a Recipe
-      </Typography>
-      <Card
-        sx={{
-          width: '100%',
-          maxWidth: '600px',
-          padding: '20px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          borderRadius: '12px',
-        }}
-      >
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-          }}
-        >
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', marginTop: '80px', marginBottom: '120px' }}>
+      <Typography variant="h4" gutterBottom>Upload a Recipe</Typography>
+      <Card sx={{ width: '100%', maxWidth: '600px', padding: '20px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', borderRadius: '12px' }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Image Upload Section */}
           <Box
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
             sx={{
               border: '2px dashed #6B8E23',
               borderRadius: '8px',
@@ -116,29 +96,18 @@ const Upload = () => {
                   },
                 }}
               >
-                Browse or Drag & Drop Image
+                Upload Image
               </Button>
             </label>
             {recipe.imagePreview && (
-              <Typography variant="body2" sx={{ marginTop: '10px' }}>
-                Selected file: {recipe.image.name}
-              </Typography>
+              <CardMedia
+                component="img"
+                image={recipe.imagePreview}
+                alt="Recipe Preview"
+                sx={{ maxHeight: '200px', objectFit: 'cover', borderRadius: '8px', marginTop: '10px' }}
+              />
             )}
           </Box>
-
-          {/* Image Preview */}
-          {recipe.imagePreview && (
-            <CardMedia
-              component="img"
-              image={recipe.imagePreview}
-              alt="Recipe Preview"
-              sx={{
-                maxHeight: '200px',
-                objectFit: 'cover',
-                borderRadius: '8px',
-              }}
-            />
-          )}
 
           {/* Recipe Title */}
           <TextField
@@ -148,7 +117,6 @@ const Upload = () => {
             onChange={handleChange}
             fullWidth
             required
-            placeholder="Enter the recipe title..."
           />
 
           {/* Recipe Description */}
@@ -161,7 +129,6 @@ const Upload = () => {
             multiline
             rows={3}
             required
-            placeholder="Describe the recipe..."
           />
 
           {/* Ingredients */}

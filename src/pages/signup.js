@@ -1,69 +1,67 @@
-import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Link, Card } from '@mui/material';
-import { useRouter } from 'next/router';
+
+import React, { useState } from "react";
+import { Box, TextField, Button, Typography, Link, Card } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/router";
+import { db } from "./firebase";
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 
 const Signup = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { signup } = useAuth();
   const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !email || !password) {
-      alert('Please fill out all fields.');
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
       return;
     }
-    console.log('Signup submitted:', { name, email, password });
-    // Add logic to handle signup (e.g., Firebase Authentication)
-    router.push('/'); // Redirect to homepage after signup
+
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("username", "==", username));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+      setError("Username is already taken");
+      return;
+    }
+
+    try {
+      const userCredential = await signup(email, password);
+      const user = userCredential.user;
+
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        username,
+        email,
+        profilePicture: null, 
+      });
+
+      router.push("/"); 
+    } catch (error) {
+      setError("Failed to sign up: " + error.message);
+    }
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        padding: '20px',
-        backgroundColor: '#f5f5f5', // Light background color
-        marginBottom: '120px',
-        marginTop: '55px'
-      }}
-    >
-      <Card
-        sx={{
-          width: '100%',
-          maxWidth: '400px',
-          padding: '20px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          borderRadius: '12px',
-          backgroundColor: '#ffffff', // White background for the card
-        }}
-      >
-        <Typography variant="h4" gutterBottom align="center">
-          Sign Up
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-          }}
-        >
-          {/* Name Field */}
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px', backgroundColor: '#f5f5f5' }}>
+      <Card sx={{ width: '100%', maxWidth: '400px', padding: '20px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', borderRadius: '12px', backgroundColor: '#ffffff' }}>
+        <Typography variant="h4" gutterBottom align="center">Sign Up</Typography>
+        {error && <Typography color="error" align="center">{error}</Typography>}
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Username Field */}
           <TextField
-            name="name"
-            label="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="username"
+            label="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             fullWidth
             required
-            placeholder="Enter your name..."
           />
 
           {/* Email Field */}
@@ -75,7 +73,6 @@ const Signup = () => {
             onChange={(e) => setEmail(e.target.value)}
             fullWidth
             required
-            placeholder="Enter your email..."
           />
 
           {/* Password Field */}
@@ -87,19 +84,17 @@ const Signup = () => {
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
             required
-            placeholder="Enter your password..."
           />
 
-          {/* Password Field */}
+          {/* Confirm Password Field */}
           <TextField
-            name="password"
+            name="confirmPassword"
             label="Confirm Password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             fullWidth
             required
-            placeholder="Enter your password again..."
           />
 
           {/* Submit Button */}
@@ -122,10 +117,7 @@ const Signup = () => {
 
           {/* Login Link */}
           <Typography variant="body2" align="center">
-            Already have an account?{' '}
-            <Link href="/login" color="primary">
-              Log in
-            </Link>
+            Already have an account? <Link href="/login" color="primary">Log in</Link>
           </Typography>
         </Box>
       </Card>
