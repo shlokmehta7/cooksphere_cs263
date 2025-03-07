@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardMedia,
@@ -13,12 +13,13 @@ import {
   ListItem,
   ListItemText,
   TextField,
-  Box
+  Box,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite"; // Filled heart icon for liked state
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { db } from "../pages/firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
 
 const RecipeCard = ({ recipe }) => {
@@ -28,21 +29,52 @@ const RecipeCard = ({ recipe }) => {
   const [likes, setLikes] = useState(recipe.likes || 0);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [isLiked, setIsLiked] = useState(false); // Track if the current user has liked the recipe
 
-  const handleLike = () => {
-    setLikes(likes + 1);
+  // Check if the current user has already liked the recipe
+  useEffect(() => {
+    if (currentUser && recipe.likedBy?.includes(currentUser.uid)) {
+      setIsLiked(true);
+    }
+  }, [currentUser, recipe.likedBy]);
+
+  const handleLike = async () => {
+    if (!currentUser) return; // Ensure the user is logged in
+
+    const recipeRef = doc(db, "recipes", recipe.id);
+
+    try {
+      if (isLiked) {
+        // If already liked, remove the like
+        await updateDoc(recipeRef, {
+          likes: likes - 1,
+          likedBy: arrayRemove(currentUser.uid),
+        });
+        setLikes(likes - 1);
+      } else {
+        // If not liked, add the like
+        await updateDoc(recipeRef, {
+          likes: likes + 1,
+          likedBy: arrayUnion(currentUser.uid),
+        });
+        setLikes(likes + 1);
+      }
+      setIsLiked(!isLiked); // Toggle the liked state
+    } catch (error) {
+      console.error("Failed to update like:", error);
+    }
   };
 
   const handleViewRecipeClick = () => {
-    setShowDetails(true); 
+    setShowDetails(true);
   };
 
   const handleCloseDetails = () => {
-    setShowDetails(false); 
+    setShowDetails(false);
   };
 
   const handleViewCommentsClick = async () => {
-    setShowComments(true); 
+    setShowComments(true);
     const commentsRef = collection(db, `recipes/${recipe.id}/comments`);
     const querySnapshot = await getDocs(commentsRef);
     const comments = querySnapshot.docs.map((doc) => ({
@@ -53,7 +85,7 @@ const RecipeCard = ({ recipe }) => {
   };
 
   const handleCloseComments = () => {
-    setShowComments(false); 
+    setShowComments(false);
   };
 
   const handleAddComment = async () => {
@@ -85,30 +117,28 @@ const RecipeCard = ({ recipe }) => {
       {/* Recipe Card */}
       <Card
         sx={{
-          maxWidth: 345,
-          width: '100%',
-          margin: '10px',
-          backgroundColor: '#FFFFFF',
-          borderRadius: '12px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          transition: 'transform 0.2s, box-shadow 0.2s',
-          '&:hover': {
-            transform: 'scale(1.05)',
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+          width: "100%", // Ensure the card takes up the full width of its grid cell
+          height: "100%", // Ensure the card takes up the full height of its grid cell
+          backgroundColor: "#FFFFFF",
+          borderRadius: "12px",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          transition: "transform 0.2s, box-shadow 0.2s",
+          "&:hover": {
+            transform: "scale(1.05)",
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
           },
-          display: 'flex',
-          flexDirection: 'column',
-          height: '400px',
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         {/* Image (3/4th of the card) */}
         <CardMedia
           component="img"
           sx={{
-            height: '75%',
-            objectFit: 'cover',
-            borderTopLeftRadius: '12px',
-            borderTopRightRadius: '12px',
+            height: "75%",
+            objectFit: "cover",
+            borderTopLeftRadius: "12px",
+            borderTopRightRadius: "12px",
           }}
           image={recipe.image}
           alt={recipe.title}
@@ -117,10 +147,10 @@ const RecipeCard = ({ recipe }) => {
         {/* Recipe Information (1/4th of the card) */}
         <CardContent
           sx={{
-            height: '25%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
+            height: "25%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
           }}
         >
           {/* Recipe Title and Description */}
@@ -136,15 +166,19 @@ const RecipeCard = ({ recipe }) => {
           {/* Like and Comment Buttons with Counts */}
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
             {/* Like Button with Count */}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
               <IconButton onClick={handleLike} aria-label="like">
-                <FavoriteBorderIcon style={{ color: '#6B8E23' }} />
+                {isLiked ? (
+                  <FavoriteIcon style={{ color: "#6B8E23" }} /> // Filled heart for liked state
+                ) : (
+                  <FavoriteBorderIcon style={{ color: "#6B8E23" }} /> // Outline heart for unliked state
+                )}
               </IconButton>
               <Typography variant="body2" color="text.secondary">
                 {likes} {/* Display like count */}
@@ -152,9 +186,9 @@ const RecipeCard = ({ recipe }) => {
             </div>
 
             {/* Comment Button with Count */}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
               <IconButton onClick={handleViewCommentsClick} aria-label="comment">
-                <ChatBubbleOutlineIcon style={{ color: '#6B8E23' }} />
+                <ChatBubbleOutlineIcon style={{ color: "#6B8E23" }} />
               </IconButton>
               <Typography variant="body2" color="text.secondary">
                 {comments.length} {/* Display comment count */}
@@ -178,7 +212,7 @@ const RecipeCard = ({ recipe }) => {
             Ingredients
           </Typography>
           <List>
-            {recipe.ingredients.split(',').map((ingredient, index) => (
+            {recipe.ingredients.split(",").map((ingredient, index) => (
               <ListItem key={index}>
                 <ListItemText primary={`${index + 1}. ${ingredient.trim()}`} />
               </ListItem>
@@ -186,11 +220,11 @@ const RecipeCard = ({ recipe }) => {
           </List>
 
           {/* Instructions */}
-          <Typography variant="h6" gutterBottom sx={{ marginTop: '16px' }}>
+          <Typography variant="h6" gutterBottom sx={{ marginTop: "16px" }}>
             Instructions
           </Typography>
           <List>
-            {recipe.instructions.split('\n').map((instruction, index) => (
+            {recipe.instructions.split("\n").map((instruction, index) => (
               <ListItem key={index}>
                 <ListItemText primary={`${index + 1}. ${instruction.trim()}`} />
               </ListItem>
@@ -205,7 +239,7 @@ const RecipeCard = ({ recipe }) => {
         <DialogContent>
           {/* Add Comment Section */}
           {currentUser && (
-            <Box sx={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+            <Box sx={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
               <TextField
                 fullWidth
                 placeholder="Add a comment..."

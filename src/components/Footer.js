@@ -37,6 +37,7 @@ const Footer = () => {
         right: 0,
         zIndex: 1000,
         transition: 'bottom 0.3s ease-in-out',
+        fontFamily: "'Poppins', sans-serif", // Apply Poppins font
       }}
     >
       <Typography variant="body1">
