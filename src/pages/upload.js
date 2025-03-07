@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Card, CardMedia } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
-import { db } from "./firebase";
+import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 const Upload = () => {

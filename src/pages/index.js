@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import RecipeCard from "../components/RecipeCard";
 import { Typography, Button, Box } from "@mui/material";
 import styles from "../styles/Home.module.css";
-import { db } from "./firebase";
+import { db } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const Home = () => {

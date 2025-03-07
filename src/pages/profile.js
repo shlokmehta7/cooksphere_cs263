@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Avatar, Button, IconButton, Card, CardContent, TextField } from "@mui/material";
 import RecipeCard from "../components/RecipeCard";
 import { useAuth } from "../context/AuthContext";
-import { db } from "./firebase";
+import { db } from "../../firebase";
 import { collection, getDocs, query, where, updateDoc } from "firebase/firestore";
 import EditIcon from "@mui/icons-material/Edit";
 import styles from "../styles/Profile.module.css";

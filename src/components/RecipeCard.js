@@ -18,7 +18,7 @@ import {
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite"; // Filled heart icon for liked state
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
-import { db } from "../pages/firebase";
+import { db } from "../../firebase";
 import { collection, addDoc, getDocs, doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext";
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Link, Card } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import { useRouter } from "next/router";
-import { db } from "./firebase";
+import { db } from "../../firebase";
 import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 
 const Signup = () => {
