@@ -63,13 +63,12 @@ const Upload = () => {
       <Typography
         variant="h4"
         gutterBottom
-        sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: "bold" }} // Apply Poppins font
+        sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: "bold" }} 
       >
         Upload a Recipe
       </Typography>
       <Card sx={{ width: '100%', maxWidth: '600px', padding: '20px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', borderRadius: '12px' }}>
         <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {/* Image Upload Section */}
           <Box
             sx={{
               border: '2px dashed #6B8E23',
@@ -97,7 +96,7 @@ const Upload = () => {
                 sx={{
                   backgroundColor: '#6B8E23',
                   color: '#fff',
-                  fontFamily: "'Poppins', sans-serif", // Apply Poppins font
+                  fontFamily: "'Poppins', sans-serif", 
                   '&:hover': {
                     backgroundColor: '#5a7c1f',
                   },
@@ -116,7 +115,6 @@ const Upload = () => {
             )}
           </Box>
 
-          {/* Recipe Title */}
           <TextField
             name="title"
             label="Recipe Title"
@@ -125,11 +123,10 @@ const Upload = () => {
             fullWidth
             required
             InputProps={{
-              style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+              style: { fontFamily: "'Poppins', sans-serif" },
             }}
           />
 
-          {/* Recipe Description */}
           <TextField
             name="description"
             label="Recipe Description"
@@ -140,11 +137,10 @@ const Upload = () => {
             rows={3}
             required
             InputProps={{
-              style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+              style: { fontFamily: "'Poppins', sans-serif" },
             }}
           />
 
-          {/* Ingredients */}
           <TextField
             name="ingredients"
             label="Ingredients"
@@ -156,11 +152,10 @@ const Upload = () => {
             required
             placeholder="List ingredients separated by commas..."
             InputProps={{
-              style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+              style: { fontFamily: "'Poppins', sans-serif" },
             }}
           />
 
-          {/* Instructions */}
           <TextField
             name="instructions"
             label="Instructions"
@@ -172,11 +167,10 @@ const Upload = () => {
             required
             placeholder="Write step-by-step instructions..."
             InputProps={{
-              style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+              style: { fontFamily: "'Poppins', sans-serif" }, 
             }}
           />
 
-          {/* Submit Button */}
           <Button
             type="submit"
             variant="contained"
@@ -186,7 +180,7 @@ const Upload = () => {
               padding: '12px',
               fontSize: '16px',
               backgroundColor: '#6B8E23',
-              fontFamily: "'Poppins', sans-serif", // Apply Poppins font
+              fontFamily: "'Poppins', sans-serif", 
               '&:hover': {
                 backgroundColor: '#5a7c1f',
               },

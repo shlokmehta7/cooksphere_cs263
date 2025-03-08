@@ -33,10 +33,9 @@ const Home = () => {
 
   return (
     <div className={styles.home}>
-      {/* Hero Section */}
       <Box
         sx={{
-          backgroundImage: "url('/images/hero.jpg')", // Add a background image
+          backgroundImage: "url('/images/hero.jpg')", 
           backgroundSize: "cover",
           backgroundPosition: "center",
           height: "400px",
@@ -45,11 +44,10 @@ const Home = () => {
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
-          color: "#fff", // Default text color (white)
+          color: "#fff", 
           padding: "20px",
         }}
       >
-        {/* Welcome to CookSphere */}
         <Typography
           variant="h2"
           gutterBottom
@@ -57,26 +55,24 @@ const Home = () => {
             fontWeight: "bold",
             fontFamily: "'Poppins', sans-serif",
             fontSize: { xs: "2rem", sm: "3rem", md: "4rem" },
-            color: "#6B8E23", // Olive green color
+            color: "#6B8E23", 
           }}
         >
           Welcome to CookSphere
         </Typography>
 
-        {/* Discover delicious recipes from around the world */}
         <Typography
           variant="h5"
           sx={{
             fontFamily: "'Poppins', sans-serif",
             fontSize: { xs: "1rem", sm: "1.5rem", md: "2rem" },
             marginBottom: "20px",
-            color: "#6B8E23", // Olive green color
+            color: "#6B8E23", 
           }}
         >
           Discover delicious recipes from around the world
         </Typography>
 
-        {/* Explore Recipes Button */}
         <Button
           variant="contained"
           color="primary"
@@ -93,7 +89,6 @@ const Home = () => {
         </Button>
       </Box>
 
-      {/* Featured Recipes Section */}
       <Box id="featured-recipes" className={styles.container} sx={{ padding: "40px 20px" }}>
         <Typography
           variant="h3"

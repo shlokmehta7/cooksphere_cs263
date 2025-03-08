@@ -41,7 +41,7 @@ const Signup = () => {
         profilePicture: null,
       });
 
-      router.push("/"); // Redirect to home page after successful signup
+      router.push("/"); 
     } catch (error) {
       setError("Failed to sign up: " + error.message);
     }
@@ -56,9 +56,9 @@ const Signup = () => {
         justifyContent: "center",
         minHeight: "100vh",
         padding: "20px",
-        backgroundColor: "#f5f5dc", // Beige background
-        marginTop: "80px", // Add margin to avoid navbar overlap
-        marginBottom: "120px", // Add margin to avoid footer overlap
+        backgroundColor: "#f5f5dc", 
+        marginTop: "80px", 
+        marginBottom: "120px", 
       }}
     >
       <Card
@@ -71,25 +71,23 @@ const Signup = () => {
           backgroundColor: "#ffffff",
         }}
       >
-        {/* Title */}
+
         <Typography variant="h4" gutterBottom align="center">
           Sign Up
         </Typography>
 
-        {/* Error Message */}
+ 
         {error && (
           <Typography color="error" align="center">
             {error}
           </Typography>
         )}
 
-        {/* Signup Form */}
         <Box
           component="form"
           onSubmit={handleSubmit}
           sx={{ display: "flex", flexDirection: "column", gap: "20px" }}
         >
-          {/* Username Field */}
           <TextField
             name="username"
             label="Username"
@@ -99,7 +97,6 @@ const Signup = () => {
             required
           />
 
-          {/* Email Field */}
           <TextField
             name="email"
             label="Email"
@@ -110,7 +107,6 @@ const Signup = () => {
             required
           />
 
-          {/* Password Field */}
           <TextField
             name="password"
             label="Password"
@@ -121,7 +117,6 @@ const Signup = () => {
             required
           />
 
-          {/* Confirm Password Field */}
           <TextField
             name="confirmPassword"
             label="Confirm Password"
@@ -132,7 +127,6 @@ const Signup = () => {
             required
           />
 
-          {/* Submit Button */}
           <Button
             type="submit"
             variant="contained"
@@ -150,7 +144,6 @@ const Signup = () => {
             Sign Up
           </Button>
 
-          {/* Login Link */}
           <Typography variant="body2" align="center">
             Already have an account?{" "}
             <Link href="/login" color="primary">

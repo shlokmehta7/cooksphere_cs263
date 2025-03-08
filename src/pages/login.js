@@ -14,9 +14,9 @@ const Login = () => {
     e.preventDefault();
     try {
       await login(email, password);
-      router.push("/"); // Redirect to home page after successful login
+      router.push("/"); 
     } catch (error) {
-      setError("Failed to log in: " + error.message); // Display error message
+      setError("Failed to log in: " + error.message); 
     }
   };
 
@@ -29,9 +29,9 @@ const Login = () => {
         justifyContent: "center",
         minHeight: "100vh",
         padding: "20px",
-        backgroundColor: "#f5f5dc", // Beige background
-        marginTop: "80px", // Add margin to avoid navbar overlap
-        marginBottom: "120px", // Add margin to avoid footer overlap
+        backgroundColor: "#f5f5dc", 
+        marginTop: "80px", 
+        marginBottom: "120px", 
       }}
     >
       <Card
@@ -44,25 +44,21 @@ const Login = () => {
           backgroundColor: "#ffffff",
         }}
       >
-        {/* Title */}
         <Typography variant="h4" gutterBottom align="center">
           Login
         </Typography>
 
-        {/* Error Message */}
         {error && (
           <Typography color="error" align="center">
             {error}
           </Typography>
         )}
 
-        {/* Login Form */}
         <Box
           component="form"
           onSubmit={handleSubmit}
           sx={{ display: "flex", flexDirection: "column", gap: "20px" }}
         >
-          {/* Email Field */}
           <TextField
             name="email"
             label="Email"
@@ -73,7 +69,6 @@ const Login = () => {
             required
           />
 
-          {/* Password Field */}
           <TextField
             name="password"
             label="Password"
@@ -84,7 +79,6 @@ const Login = () => {
             required
           />
 
-          {/* Submit Button */}
           <Button
             type="submit"
             variant="contained"
@@ -102,7 +96,6 @@ const Login = () => {
             Login
           </Button>
 
-          {/* Signup Link */}
           <Typography variant="body2" align="center">
             Don't have an account?{" "}
             <Link href="/signup" color="primary">

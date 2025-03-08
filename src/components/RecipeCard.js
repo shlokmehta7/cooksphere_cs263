@@ -16,7 +16,7 @@ import {
   Box,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite"; // Filled heart icon for liked state
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { db } from "../../firebase";
 import { collection, addDoc, getDocs, doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
@@ -29,19 +29,18 @@ const RecipeCard = ({ recipe }) => {
   const [likes, setLikes] = useState(recipe.likes || 0);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-  const [isLiked, setIsLiked] = useState(false); // Track if the current user has liked the recipe
+  const [isLiked, setIsLiked] = useState(false); 
 
-  // Ensure recipe fields have default values
   const {
     title = "Untitled Recipe",
     description = "No description available.",
-    image = "/images/default-recipe.jpg", // Add a default image
-    ingredients = "", // Default empty string for ingredients
-    instructions = "", // Default empty string for instructions
-    likedBy = [], // Default empty array for likedBy
+    image = "/images/default-recipe.jpg",
+    ingredients = "", 
+    instructions = "", 
+    likedBy = [], 
   } = recipe;
 
-  // Check if the current user has already liked the recipe
+  
   useEffect(() => {
     if (currentUser && likedBy.includes(currentUser.uid)) {
       setIsLiked(true);
@@ -49,27 +48,25 @@ const RecipeCard = ({ recipe }) => {
   }, [currentUser, likedBy]);
 
   const handleLike = async () => {
-    if (!currentUser) return; // Ensure the user is logged in
+    if (!currentUser) return; 
 
     const recipeRef = doc(db, "recipes", recipe.id);
 
     try {
       if (isLiked) {
-        // If already liked, remove the like
         await updateDoc(recipeRef, {
           likes: likes - 1,
           likedBy: arrayRemove(currentUser.uid),
         });
         setLikes(likes - 1);
       } else {
-        // If not liked, add the like
         await updateDoc(recipeRef, {
           likes: likes + 1,
           likedBy: arrayUnion(currentUser.uid),
         });
         setLikes(likes + 1);
       }
-      setIsLiked(!isLiked); // Toggle the liked state
+      setIsLiked(!isLiked); 
     } catch (error) {
       console.error("Failed to update like:", error);
     }
@@ -124,11 +121,10 @@ const RecipeCard = ({ recipe }) => {
 
   return (
     <>
-      {/* Recipe Card */}
       <Card
         sx={{
-          width: "100%", // Ensure the card takes up the full width of its grid cell
-          height: "100%", // Ensure the card takes up the full height of its grid cell
+          width: "100%", 
+          height: "100%", 
           backgroundColor: "#FFFFFF",
           borderRadius: "12px",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -141,7 +137,6 @@ const RecipeCard = ({ recipe }) => {
           flexDirection: "column",
         }}
       >
-        {/* Image (3/4th of the card) */}
         <CardMedia
           component="img"
           sx={{
@@ -154,7 +149,6 @@ const RecipeCard = ({ recipe }) => {
           alt={title}
         />
 
-        {/* Recipe Information (1/4th of the card) */}
         <CardContent
           sx={{
             height: "25%",
@@ -163,7 +157,6 @@ const RecipeCard = ({ recipe }) => {
             justifyContent: "space-between",
           }}
         >
-          {/* Recipe Title and Description */}
           <div>
             <Typography gutterBottom variant="h5" component="div">
               {title}
@@ -173,7 +166,6 @@ const RecipeCard = ({ recipe }) => {
             </Typography>
           </div>
 
-          {/* Like and Comment Buttons with Counts */}
           <div
             style={{
               display: "flex",
@@ -181,31 +173,28 @@ const RecipeCard = ({ recipe }) => {
               alignItems: "center",
             }}
           >
-            {/* Like Button with Count */}
             <div style={{ display: "flex", alignItems: "center" }}>
               <IconButton onClick={handleLike} aria-label="like">
                 {isLiked ? (
-                  <FavoriteIcon style={{ color: "#6B8E23" }} /> // Filled heart for liked state
+                  <FavoriteIcon style={{ color: "#6B8E23" }} /> 
                 ) : (
-                  <FavoriteBorderIcon style={{ color: "#6B8E23" }} /> // Outline heart for unliked state
+                  <FavoriteBorderIcon style={{ color: "#6B8E23" }} /> 
                 )}
               </IconButton>
               <Typography variant="body2" color="text.secondary">
-                {likes} {/* Display like count */}
+                {likes} 
               </Typography>
             </div>
 
-            {/* Comment Button with Count */}
             <div style={{ display: "flex", alignItems: "center" }}>
               <IconButton onClick={handleViewCommentsClick} aria-label="comment">
                 <ChatBubbleOutlineIcon style={{ color: "#6B8E23" }} />
               </IconButton>
               <Typography variant="body2" color="text.secondary">
-                {comments.length} {/* Display comment count */}
+                {comments.length} 
               </Typography>
             </div>
 
-            {/* View Recipe Button */}
             <Button size="small" color="primary" onClick={handleViewRecipeClick}>
               View Recipe
             </Button>
@@ -213,11 +202,9 @@ const RecipeCard = ({ recipe }) => {
         </CardContent>
       </Card>
 
-      {/* Recipe Details Modal */}
       <Dialog open={showDetails} onClose={handleCloseDetails} maxWidth="md" fullWidth>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          {/* Ingredients */}
           <Typography variant="h6" gutterBottom>
             Ingredients
           </Typography>
@@ -233,7 +220,6 @@ const RecipeCard = ({ recipe }) => {
             )}
           </List>
 
-          {/* Instructions */}
           <Typography variant="h6" gutterBottom sx={{ marginTop: "16px" }}>
             Instructions
           </Typography>
@@ -251,11 +237,9 @@ const RecipeCard = ({ recipe }) => {
         </DialogContent>
       </Dialog>
 
-      {/* Comments Modal */}
       <Dialog open={showComments} onClose={handleCloseComments} maxWidth="md" fullWidth>
         <DialogTitle>Comments</DialogTitle>
         <DialogContent>
-          {/* Add Comment Section */}
           {currentUser && (
             <Box sx={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
               <TextField
@@ -270,7 +254,6 @@ const RecipeCard = ({ recipe }) => {
             </Box>
           )}
 
-          {/* Comments List */}
           <List>
             {comments.map((comment) => (
               <ListItem key={comment.id}>

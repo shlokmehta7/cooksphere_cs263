@@ -88,13 +88,12 @@ const Profile = () => {
     <Box
       sx={{
         padding: "20px",
-        backgroundColor: "#f5f5dc", // Beige background
+        backgroundColor: "#f5f5dc", 
         minHeight: "100vh",
-        marginTop: "80px", // Add margin to avoid navbar overlap
-        marginBottom: "120px", // Add margin to avoid footer overlap
+        marginTop: "80px", 
+        marginBottom: "120px", 
       }}
     >
-      {/* Profile Section */}
       <Box
         sx={{
           display: "flex",
@@ -107,7 +106,6 @@ const Profile = () => {
           marginBottom: "40px",
         }}
       >
-        {/* Profile Picture Upload */}
         <input
           type="file"
           accept="image/*"
@@ -136,7 +134,6 @@ const Profile = () => {
           </IconButton>
         </label>
 
-        {/* Username Display and Edit */}
         {isEditingUsername ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
             <TextField
@@ -145,7 +142,7 @@ const Profile = () => {
               placeholder="Enter new username"
               size="small"
               InputProps={{
-                style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+                style: { fontFamily: "'Poppins', sans-serif" }, 
               }}
             />
             <Button
@@ -160,7 +157,7 @@ const Profile = () => {
               variant="outlined"
               color="secondary"
               onClick={() => setIsEditingUsername(false)}
-              sx={{ fontFamily: "'Poppins', sans-serif" }} // Apply Poppins font
+              sx={{ fontFamily: "'Poppins', sans-serif" }} 
             >
               Cancel
             </Button>
@@ -176,7 +173,6 @@ const Profile = () => {
           </Box>
         )}
 
-        {/* Logout Button */}
         <Button
           variant="contained"
           color="primary"
@@ -187,7 +183,6 @@ const Profile = () => {
         </Button>
       </Box>
 
-      {/* Uploaded Recipes Section */}
       <Typography variant="h4" gutterBottom sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center',marginBottom: "20px", fontFamily: "'Poppins', sans-serif", fontWeight: "bold" }}>
         Your Recipes
       </Typography>

@@ -1,14 +1,13 @@
 import React from "react";
 import { Typography, Box, Grid } from "@mui/material";
 import RecipeCard from "../components/RecipeCard";
-import styles from "../styles/Home.module.css"; // Import the same styles as the homepage
+import styles from "../styles/Home.module.css";
 
 const SearchResults = ({ results }) => {
   const recipes = JSON.parse(results);
 
   return (
     <div className={styles.home}>
-      {/* Featured Recipes Section */}
       <Box className={styles.container} sx={{ padding: "40px 20px" }}>
         <Typography
           variant="h3"
