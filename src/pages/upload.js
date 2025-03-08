@@ -60,7 +60,13 @@ const Upload = () => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', marginTop: '80px', marginBottom: '120px' }}>
-      <Typography variant="h4" gutterBottom>Upload a Recipe</Typography>
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: "bold" }} // Apply Poppins font
+      >
+        Upload a Recipe
+      </Typography>
       <Card sx={{ width: '100%', maxWidth: '600px', padding: '20px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', borderRadius: '12px' }}>
         <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Image Upload Section */}
@@ -91,6 +97,7 @@ const Upload = () => {
                 sx={{
                   backgroundColor: '#6B8E23',
                   color: '#fff',
+                  fontFamily: "'Poppins', sans-serif", // Apply Poppins font
                   '&:hover': {
                     backgroundColor: '#5a7c1f',
                   },
@@ -117,6 +124,9 @@ const Upload = () => {
             onChange={handleChange}
             fullWidth
             required
+            InputProps={{
+              style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+            }}
           />
 
           {/* Recipe Description */}
@@ -129,6 +139,9 @@ const Upload = () => {
             multiline
             rows={3}
             required
+            InputProps={{
+              style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+            }}
           />
 
           {/* Ingredients */}
@@ -142,6 +155,9 @@ const Upload = () => {
             rows={5}
             required
             placeholder="List ingredients separated by commas..."
+            InputProps={{
+              style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+            }}
           />
 
           {/* Instructions */}
@@ -155,6 +171,9 @@ const Upload = () => {
             rows={5}
             required
             placeholder="Write step-by-step instructions..."
+            InputProps={{
+              style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+            }}
           />
 
           {/* Submit Button */}
@@ -167,6 +186,7 @@ const Upload = () => {
               padding: '12px',
               fontSize: '16px',
               backgroundColor: '#6B8E23',
+              fontFamily: "'Poppins', sans-serif", // Apply Poppins font
               '&:hover': {
                 backgroundColor: '#5a7c1f',
               },

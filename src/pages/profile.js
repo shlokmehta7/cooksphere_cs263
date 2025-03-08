@@ -144,12 +144,15 @@ const Profile = () => {
               onChange={(e) => setNewUsername(e.target.value)}
               placeholder="Enter new username"
               size="small"
+              InputProps={{
+                style: { fontFamily: "'Poppins', sans-serif" }, // Apply Poppins font
+              }}
             />
             <Button
               variant="contained"
               color="primary"
               onClick={handleUsernameUpdate}
-              sx={{ backgroundColor: "#6B8E23", "&:hover": { backgroundColor: "#5a7c1f" } }}
+              sx={{ backgroundColor: "#6B8E23", fontFamily: "'Poppins', sans-serif", "&:hover": { backgroundColor: "#5a7c1f" } }}
             >
               Save
             </Button>
@@ -157,13 +160,14 @@ const Profile = () => {
               variant="outlined"
               color="secondary"
               onClick={() => setIsEditingUsername(false)}
+              sx={{ fontFamily: "'Poppins', sans-serif" }} // Apply Poppins font
             >
               Cancel
             </Button>
           </Box>
         ) : (
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom sx={{ fontFamily: "'Poppins', sans-serif", fontWeight: "bold" }}>
               {username}
             </Typography>
             <IconButton onClick={() => setIsEditingUsername(true)}>
@@ -177,14 +181,14 @@ const Profile = () => {
           variant="contained"
           color="primary"
           onClick={logout}
-          sx={{ backgroundColor: "#6B8E23", "&:hover": { backgroundColor: "#5a7c1f" } }}
+          sx={{ backgroundColor: "#6B8E23", fontFamily: "'Poppins', sans-serif", "&:hover": { backgroundColor: "#5a7c1f" } }}
         >
           Logout
         </Button>
       </Box>
 
       {/* Uploaded Recipes Section */}
-      <Typography variant="h5" gutterBottom sx={{ marginBottom: "20px" }}>
+      <Typography variant="h4" gutterBottom sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center',marginBottom: "20px", fontFamily: "'Poppins', sans-serif", fontWeight: "bold" }}>
         Your Recipes
       </Typography>
       <Box className={styles.recipeGrid}>
@@ -193,7 +197,9 @@ const Profile = () => {
             <RecipeCard key={recipe.id} recipe={recipe} />
           ))
         ) : (
-          <Typography variant="body1">No recipes found.</Typography>
+          <Typography variant="body1" sx={{ fontFamily: "'Poppins', sans-serif" }}>
+            No recipes found.
+          </Typography>
         )}
       </Box>
     </Box>

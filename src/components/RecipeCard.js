@@ -31,12 +31,22 @@ const RecipeCard = ({ recipe }) => {
   const [newComment, setNewComment] = useState("");
   const [isLiked, setIsLiked] = useState(false); // Track if the current user has liked the recipe
 
+  // Ensure recipe fields have default values
+  const {
+    title = "Untitled Recipe",
+    description = "No description available.",
+    image = "/images/default-recipe.jpg", // Add a default image
+    ingredients = "", // Default empty string for ingredients
+    instructions = "", // Default empty string for instructions
+    likedBy = [], // Default empty array for likedBy
+  } = recipe;
+
   // Check if the current user has already liked the recipe
   useEffect(() => {
-    if (currentUser && recipe.likedBy?.includes(currentUser.uid)) {
+    if (currentUser && likedBy.includes(currentUser.uid)) {
       setIsLiked(true);
     }
-  }, [currentUser, recipe.likedBy]);
+  }, [currentUser, likedBy]);
 
   const handleLike = async () => {
     if (!currentUser) return; // Ensure the user is logged in
@@ -140,8 +150,8 @@ const RecipeCard = ({ recipe }) => {
             borderTopLeftRadius: "12px",
             borderTopRightRadius: "12px",
           }}
-          image={recipe.image}
-          alt={recipe.title}
+          image={image}
+          alt={title}
         />
 
         {/* Recipe Information (1/4th of the card) */}
@@ -156,10 +166,10 @@ const RecipeCard = ({ recipe }) => {
           {/* Recipe Title and Description */}
           <div>
             <Typography gutterBottom variant="h5" component="div">
-              {recipe.title}
+              {title}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {recipe.description}
+              {description}
             </Typography>
           </div>
 
@@ -205,18 +215,22 @@ const RecipeCard = ({ recipe }) => {
 
       {/* Recipe Details Modal */}
       <Dialog open={showDetails} onClose={handleCloseDetails} maxWidth="md" fullWidth>
-        <DialogTitle>{recipe.title}</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           {/* Ingredients */}
           <Typography variant="h6" gutterBottom>
             Ingredients
           </Typography>
           <List>
-            {recipe.ingredients.split(",").map((ingredient, index) => (
-              <ListItem key={index}>
-                <ListItemText primary={`${index + 1}. ${ingredient.trim()}`} />
-              </ListItem>
-            ))}
+            {ingredients ? (
+              ingredients.split(",").map((ingredient, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={`${index + 1}. ${ingredient.trim()}`} />
+                </ListItem>
+              ))
+            ) : (
+              <Typography variant="body2">No ingredients listed.</Typography>
+            )}
           </List>
 
           {/* Instructions */}
@@ -224,11 +238,15 @@ const RecipeCard = ({ recipe }) => {
             Instructions
           </Typography>
           <List>
-            {recipe.instructions.split("\n").map((instruction, index) => (
-              <ListItem key={index}>
-                <ListItemText primary={`${index + 1}. ${instruction.trim()}`} />
-              </ListItem>
-            ))}
+            {instructions ? (
+              instructions.split("\n").map((instruction, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={`${index + 1}. ${instruction.trim()}`} />
+                </ListItem>
+              ))
+            ) : (
+              <Typography variant="body2">No instructions listed.</Typography>
+            )}
           </List>
         </DialogContent>
       </Dialog>
